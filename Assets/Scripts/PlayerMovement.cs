@@ -1,23 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
 
-    // Movement Variables
+    // Movement Variables =====
     [SerializeField] private KeyCode sprintKey;
     private CharacterController characterController;
     [SerializeField] private float playerMovementSpeed = 5f;
     [SerializeField] private float playerSprintSpeed = 8f;
     private Vector3 playerVelocity;
 
-    // Throwable Variables
+    // Throwable Variables =====
+    [SerializeField] private GameObject playerGameObject;
+    [SerializeField] private GameObject throwableGameObject;
     [SerializeField] private KeyCode interactWithThrowable;
     private bool holdingThrowable = false;
-    [SerializeField] private float pickUpRadius = 5f;
+    [SerializeField] private float raycastDistance = 1f;
     [SerializeField] private LayerMask throwableObjectLayer;
+    [SerializeField] private Rigidbody throwableObjectRB;
+
 
 
     private void Start()
@@ -59,32 +64,46 @@ public class PlayerMovement : MonoBehaviour
 
         // PLAYER INTERACTING WITH THROWABLE Object =====
 
-        if (Input.GetKeyDown (interactWithThrowable))
+  
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, raycastDistance, throwableObjectLayer))
         {
-            InteractWithThrowable();
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.blue);
+            Debug.Log("Did Hit");
+
+            if (Input.GetKeyDown(interactWithThrowable))
+            {
+                InteractWithThrowable();
+            }
         }
 
     }
-
+    // this function will only run if there is another throwable object in the raycast'
+    // I need to move that 
     private void ThrowObject()
     {
-        // game object will need it's own
-        // rigidbody
+        throwableGameObject.GetComponent<Rigidbody>().isKinematic = false;
+        throwableGameObject.transform.parent = null;
+        throwableObjectRB.AddForce(0, 0, 1);
     }
 
     private void InteractWithThrowable()
     {
-
-        Collider[] colliders = Physics.OverlapSphere(transform.position, pickUpRadius, throwableObjectLayer);
-
-        foreach (Collider collider in colliders)
+        
+        if(holdingThrowable == true)
         {
-            if(gameObject.layer == throwableObjectLayer)
-            {
-                Debug.Log("Can Pick Up");
-            }
+            ThrowObject();
         }
-
+       
+        else
+        {
+            throwableGameObject.GetComponent<Rigidbody>().isKinematic = true; 
+            throwableGameObject.transform.position = playerGameObject.transform.position;
+            throwableGameObject.transform.parent = playerGameObject.transform;
+            holdingThrowable = true;
+        }
 
         // if they do - then throw that object
 
