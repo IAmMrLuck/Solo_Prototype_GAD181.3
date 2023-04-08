@@ -12,7 +12,9 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController characterController;
     [SerializeField] private float playerMovementSpeed = 5f;
     [SerializeField] private float playerSprintSpeed = 8f;
+    [SerializeField] private float playerGravity = -10f;
     private Vector3 playerVelocity;
+    private bool groundedPlayer;
 
     // Throwable Variables =====
     [SerializeField] private GameObject playerGameObject;
@@ -22,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float raycastDistance = 1f;
     [SerializeField] private LayerMask throwableObjectLayer;
     [SerializeField] private Rigidbody throwableObjectRB;
+    [SerializeField] private float throwableObjectSpeed;
 
 
 
@@ -36,6 +39,11 @@ public class PlayerMovement : MonoBehaviour
 
         // PLAYER MOVEMENT OPTIONS ==========
 
+        groundedPlayer = characterController.isGrounded;
+        if (groundedPlayer && playerVelocity.y < 0)
+        {
+            playerVelocity.y = 0f;
+        }
 
         // Shift to Run =====
         if (Input.GetKeyDown(sprintKey))
@@ -60,11 +68,14 @@ public class PlayerMovement : MonoBehaviour
             gameObject.transform.forward = move;
         }
         characterController.Move(playerVelocity * Time.deltaTime);
+        playerVelocity.y += playerGravity *Time.deltaTime;
 
 
         // PLAYER INTERACTING WITH THROWABLE Object =====
-
-  
+        if (holdingThrowable == true && Input.GetKeyDown(interactWithThrowable))
+        {
+            ThrowObject();
+        }
 
         RaycastHit hit;
 
@@ -86,31 +97,16 @@ public class PlayerMovement : MonoBehaviour
     {
         throwableGameObject.GetComponent<Rigidbody>().isKinematic = false;
         throwableGameObject.transform.parent = null;
-        throwableObjectRB.AddForce(0, 0, 1);
+        throwableObjectRB.AddRelativeForce(0, 0, throwableObjectSpeed);
+
     }
 
     private void InteractWithThrowable()
-    {
-        
-        if(holdingThrowable == true)
-        {
-            ThrowObject();
-        }
-       
-        else
-        {
-            throwableGameObject.GetComponent<Rigidbody>().isKinematic = true; 
-            throwableGameObject.transform.position = playerGameObject.transform.position;
-            throwableGameObject.transform.parent = playerGameObject.transform;
-            holdingThrowable = true;
-        }
+    { 
+        throwableGameObject.GetComponent<Rigidbody>().isKinematic = true; 
+        throwableGameObject.transform.position = playerGameObject.transform.position;
+        throwableGameObject.transform.parent = playerGameObject.transform;
+        holdingThrowable = true;
 
-        // if they do - then throw that object
-
-        // if they do not - check if they are close enough to pick up a throwable object
-
-        // if they are not - do nothing
-
-        // if they are - pick that object up
     }
 }
