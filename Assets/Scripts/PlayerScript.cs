@@ -1,3 +1,4 @@
+using ConaLuk.TopDown;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -40,11 +41,13 @@ namespace Conaluk.TopDown
         [SerializeField] private LayerMask throwableObjectLayer;
         [SerializeField] private Rigidbody throwableObjectRB;
         [SerializeField] private float throwableObjectSpeed;
+        public ThrowableObjectScript throwHeldObject;
 
 
 
         private void Start()
         {
+
             characterController = GetComponent<CharacterController>();
         }
 
@@ -89,7 +92,7 @@ namespace Conaluk.TopDown
             // PLAYER INTERACTING WITH THROWABLE Object =====
             if (holdingThrowable == true && Input.GetKeyDown(interactWithThrowable))
             {
-                ThrowObject();
+                ThrowableObjectScript.ThrowHeldObject();
             }
 
             RaycastHit hit;
@@ -125,13 +128,7 @@ namespace Conaluk.TopDown
 
         // this function will only run if there is another throwable object in the raycast'
         // I need to move that 
-        private void ThrowObject()
-        {
-            throwableGameObject.GetComponent<Rigidbody>().isKinematic = false;
-            throwableGameObject.transform.parent = null;
-            throwableObjectRB.AddRelativeForce(0, 0, throwableObjectSpeed);
 
-        }
 
         private void InteractWithThrowable()
         {
