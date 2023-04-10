@@ -73,6 +73,10 @@ namespace Conaluk.TopDown
                 playerMovementSpeed = 5f;
             }
             if (holdingThrowable == true)
+
+
+
+
             {
                 playerMovementSpeed = 3f;
             }
@@ -92,7 +96,7 @@ namespace Conaluk.TopDown
             // PLAYER INTERACTING WITH THROWABLE Object =====
             if (holdingThrowable == true && Input.GetKeyDown(interactWithThrowable))
             {
-                ThrowableObjectScript.ThrowHeldObject();
+                throwHeldObject.ThrowHeldObject();
             }
 
             RaycastHit hit;
@@ -105,6 +109,8 @@ namespace Conaluk.TopDown
                 if (Input.GetKeyDown(interactWithThrowable))
                 {
                     InteractWithThrowable();
+                    Debug.Log("holding Throwable is True");
+
                 }
             }
 
@@ -132,10 +138,10 @@ namespace Conaluk.TopDown
 
         private void InteractWithThrowable()
         {
+            holdingThrowable = true;
             throwableGameObject.GetComponent<Rigidbody>().isKinematic = true;
             throwableGameObject.transform.position = playerGameObject.transform.position;
             throwableGameObject.transform.parent = playerGameObject.transform;
-            holdingThrowable = true;
 
         }
 
