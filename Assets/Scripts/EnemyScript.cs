@@ -6,7 +6,6 @@ using UnityEngine.AI;
 
 namespace Conaluk.TopDown
 {
-
     public class EnemyScript : MonoBehaviour
     {
         [Header("Enemy Type")]

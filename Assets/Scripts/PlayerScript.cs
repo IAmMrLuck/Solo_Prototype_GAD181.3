@@ -5,10 +5,12 @@ using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace Conaluk.TopDown
 {
+    [RequireComponent(typeof(CharacterController))]
     public class PlayerScript : MonoBehaviour
     {
         [Header("Combat Stats")]
@@ -28,6 +30,9 @@ namespace Conaluk.TopDown
         [SerializeField] private float playerGravity = -10f;
         private Vector3 playerVelocity;
         private bool groundedPlayer;
+        private Vector2 playerPosition;
+        private bool interacted = false;
+        private bool sprinting = false;
 
 
         [Header("Interaction wtih Throwables")]
@@ -51,6 +56,24 @@ namespace Conaluk.TopDown
             characterController = GetComponent<CharacterController>();
         }
 
+        public void OnMove(InputAction.CallbackContext context)
+        {
+            playerPosition = context.ReadValue<Vector2>();
+
+        }
+
+        public void OnInteract(InputAction.CallbackContext context)
+        {
+            interacted = context.ReadValue<bool>();
+            interacted = context.action.triggered;
+        }
+
+        public void OnSprint(InputAction.CallbackContext context)
+        {
+            sprinting = context.ReadValue<bool>();
+            sprinting = context.action.triggered;
+        }
+
         private void Update()
         {
             // PLAYER MOVEMENT OPTIONS ==========
@@ -61,11 +84,11 @@ namespace Conaluk.TopDown
             }
 
             // Shift to Run =====
-            if (Input.GetKeyDown(sprintKey))
+            if (sprinting)
             {
                 playerMovementSpeed = playerSprintSpeed;
             }
-            if (Input.GetKeyUp(sprintKey))
+            if (sprinting)
             {
                 playerMovementSpeed = 5f;
             }
@@ -75,7 +98,7 @@ namespace Conaluk.TopDown
             }
 
             // Arrows / WASD to move around =====
-            Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            Vector3 move = new Vector3(playerPosition.x, 0, playerPosition.y);
             characterController.Move(move * Time.deltaTime * playerMovementSpeed);
 
             if (move != Vector3.zero)
@@ -87,7 +110,7 @@ namespace Conaluk.TopDown
 
 
             // PLAYER INTERACTING WITH THROWABLE Object =====
-            if (holdingThrowable == true && Input.GetKeyDown(interactWithThrowable))
+            if (holdingThrowable == true && interacted)
             {
                 throwableGameObject.transform.SetParent(null);
                 Debug.Log("LaunchThrowable Called");
@@ -103,7 +126,7 @@ namespace Conaluk.TopDown
                 Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.blue);
                 Debug.Log("Did Hit");
 
-                if (Input.GetKeyDown(interactWithThrowable))
+                if (interacted)
                 {
                     InteractWithThrowable();
                     Debug.Log("holding Throwable is True");
