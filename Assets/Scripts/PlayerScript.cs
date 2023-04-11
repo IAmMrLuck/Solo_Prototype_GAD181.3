@@ -92,7 +92,7 @@ namespace Conaluk.TopDown
                 throwableGameObject.transform.SetParent(null);
                 Debug.Log("LaunchThrowable Called");
                 throwableObjectRB.isKinematic = false;
-                throwableObjectRB.AddRelativeForce(Vector3.forward);
+                throwableObjectRB.AddRelativeForce(transform.forward);
                 throwableVeloctiy.y += downwardMomentum * Time.deltaTime;
             }
 

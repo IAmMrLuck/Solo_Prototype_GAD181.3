@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Throwable Object
   - Enemy
+  - Dissolvable Wall
+  - Player One
+  - Player Two
   layers:
   - Default
   - TransparentFX

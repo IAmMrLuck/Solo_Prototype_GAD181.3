@@ -15,6 +15,7 @@ namespace Conaluk.TopDown
         [Header("Enemy Movement")]
         private NavMeshAgent enemyAgent;
         [SerializeField] private GameObject playerGameObject;
+        [SerializeField] private GameObject player2GameObject;
         [SerializeField] private float enemyMovementSpeed;
 
         [Header("Combat Stats")]
@@ -32,6 +33,7 @@ namespace Conaluk.TopDown
             enemyHitCounter = 0;
             enemyAgent = GetComponent<NavMeshAgent>();
             playerGameObject = GameObject.FindWithTag("Player");
+            player2GameObject = GameObject.FindWithTag("Player");
         }
 
         private void Update()
