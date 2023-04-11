@@ -2,18 +2,17 @@ using ConaLuk.TopDown;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
 namespace Conaluk.TopDown
 {
-
     public class PlayerScript : MonoBehaviour
     {
         [Header("Combat Stats")]
-        //==========================================================
+        //==========================================================//
         [SerializeField] private int playerHitCounter;
         [SerializeField] private int playerHitLimit;
         private bool playerHitLimitReached;
@@ -21,7 +20,7 @@ namespace Conaluk.TopDown
 
 
         [Header("Movement Variables")]
-        //==========================================================
+        //==========================================================//
         [SerializeField] private KeyCode sprintKey;
         private CharacterController characterController;
         [SerializeField] private float playerMovementSpeed = 5f;
@@ -32,7 +31,7 @@ namespace Conaluk.TopDown
 
 
         [Header("Interaction wtih Throwables")]
-        //==========================================================
+        //==========================================================//
         [SerializeField] private GameObject playerGameObject;
         [SerializeField] private GameObject throwableGameObject;
         [SerializeField] private KeyCode interactWithThrowable;
@@ -42,21 +41,19 @@ namespace Conaluk.TopDown
         [SerializeField] private Rigidbody throwableObjectRB;
         [SerializeField] private float throwableObjectSpeed;
         public ThrowableObjectScript throwHeldObject;
-
-
+        private Vector3 throwableVeloctiy;
+        [SerializeField] private float forwardMomentum;
+        [SerializeField] private float upwardMomentum;
+        [SerializeField] private float downwardMomentum;
 
         private void Start()
         {
-
             characterController = GetComponent<CharacterController>();
         }
 
-
         private void Update()
         {
-
             // PLAYER MOVEMENT OPTIONS ==========
-
             groundedPlayer = characterController.isGrounded;
             if (groundedPlayer && playerVelocity.y < 0)
             {
@@ -73,11 +70,7 @@ namespace Conaluk.TopDown
                 playerMovementSpeed = 5f;
             }
             if (holdingThrowable == true)
-
-
-
-
-            {
+            {                               // can sprint instead? //
                 playerMovementSpeed = 3f;
             }
 
@@ -96,7 +89,11 @@ namespace Conaluk.TopDown
             // PLAYER INTERACTING WITH THROWABLE Object =====
             if (holdingThrowable == true && Input.GetKeyDown(interactWithThrowable))
             {
-                throwHeldObject.ThrowHeldObject();
+                throwableGameObject.transform.SetParent(null);
+                Debug.Log("LaunchThrowable Called");
+                throwableObjectRB.isKinematic = false;
+                throwableObjectRB.AddRelativeForce(Vector3.forward);
+                throwableVeloctiy.y += downwardMomentum * Time.deltaTime;
             }
 
             RaycastHit hit;
@@ -122,7 +119,6 @@ namespace Conaluk.TopDown
             {
                 EndGame();
             }
-
         }
         private void OnCollisionEnter(Collision collision)
         {
@@ -132,17 +128,12 @@ namespace Conaluk.TopDown
             }
         }
 
-        // this function will only run if there is another throwable object in the raycast'
-        // I need to move that 
-
-
         private void InteractWithThrowable()
         {
             holdingThrowable = true;
             throwableGameObject.GetComponent<Rigidbody>().isKinematic = true;
             throwableGameObject.transform.position = playerGameObject.transform.position;
             throwableGameObject.transform.parent = playerGameObject.transform;
-
         }
 
         void EndGame()
