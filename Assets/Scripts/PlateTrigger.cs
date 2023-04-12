@@ -8,7 +8,6 @@ namespace Conaluk.TopDown
 {
     public class PlateTrigger : MonoBehaviour
     {
-
         [SerializeField] private WallManager WallManager;
 
         void OnTriggerEnter(Collider other)

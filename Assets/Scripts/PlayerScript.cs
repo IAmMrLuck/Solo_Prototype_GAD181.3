@@ -1,11 +1,6 @@
 using ConaLuk.TopDown;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
-using UnityEditor.Animations;
+
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace Conaluk.TopDown
@@ -30,9 +25,10 @@ namespace Conaluk.TopDown
         [SerializeField] private float playerGravity = -10f;
         private Vector3 playerVelocity;
         private bool groundedPlayer;
-        private Vector2 playerPosition;
-        private bool interacted = false;
-        private bool sprinting = false;
+
+        //private Vector2 playerIsMoving;
+        //private bool interacted = false;
+        //private bool sprinting = false;
 
 
         [Header("Interaction wtih Throwables")]
@@ -45,7 +41,6 @@ namespace Conaluk.TopDown
         [SerializeField] private LayerMask throwableObjectLayer;
         [SerializeField] private Rigidbody throwableObjectRB;
         [SerializeField] private float throwableObjectSpeed;
-        public ThrowableObjectScript throwHeldObject;
         private Vector3 throwableVeloctiy;
         [SerializeField] private float forwardMomentum;
         [SerializeField] private float upwardMomentum;
@@ -53,26 +48,26 @@ namespace Conaluk.TopDown
 
         private void Start()
         {
-            characterController = GetComponent<CharacterController>();
+            characterController = gameObject.GetComponent<CharacterController>();
         }
 
-        public void OnMove(InputAction.CallbackContext context)
-        {
-            playerPosition = context.ReadValue<Vector2>();
+        //public void OnMove(InputAction.CallbackContext context)
+        //{
+        //    playerIsMoving = context.ReadValue<Vector2>();
 
-        }
+        //}
 
-        public void OnInteract(InputAction.CallbackContext context)
-        {
-            interacted = context.ReadValue<bool>();
-            interacted = context.action.triggered;
-        }
+        //public void OnInteract(InputAction.CallbackContext context)
+        //{
+        //    interacted = context.ReadValue<bool>();
+        //    interacted = context.action.triggered;
+        //}
 
-        public void OnSprint(InputAction.CallbackContext context)
-        {
-            sprinting = context.ReadValue<bool>();
-            sprinting = context.action.triggered;
-        }
+        //public void OnSprint(InputAction.CallbackContext context)
+        //{
+        //    sprinting = context.ReadValue<bool>();
+        //    sprinting = context.action.triggered;
+        //}
 
         private void Update()
         {
@@ -84,11 +79,11 @@ namespace Conaluk.TopDown
             }
 
             // Shift to Run =====
-            if (sprinting)
+            if (Input.GetKeyDown(sprintKey))
             {
                 playerMovementSpeed = playerSprintSpeed;
             }
-            if (sprinting)
+            if (Input.GetKeyDown(sprintKey))
             {
                 playerMovementSpeed = 5f;
             }
@@ -98,7 +93,7 @@ namespace Conaluk.TopDown
             }
 
             // Arrows / WASD to move around =====
-            Vector3 move = new Vector3(playerPosition.x, 0, playerPosition.y);
+            Vector3 move = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
             characterController.Move(move * Time.deltaTime * playerMovementSpeed);
 
             if (move != Vector3.zero)
@@ -110,13 +105,13 @@ namespace Conaluk.TopDown
 
 
             // PLAYER INTERACTING WITH THROWABLE Object =====
-            if (holdingThrowable == true && interacted)
+            if (holdingThrowable == true && Input.GetKeyDown(interactWithThrowable))
             {
                 throwableGameObject.transform.SetParent(null);
                 Debug.Log("LaunchThrowable Called");
                 throwableObjectRB.isKinematic = false;
-                throwableObjectRB.AddRelativeForce(transform.forward);
-                throwableVeloctiy.y += downwardMomentum * Time.deltaTime;
+                throwableObjectRB.AddForce(transform.forward * 100f);
+                //throwableVeloctiy.y += downwardMomentum * Time.deltaTime;
             }
 
             RaycastHit hit;
@@ -126,7 +121,7 @@ namespace Conaluk.TopDown
                 Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.blue);
                 Debug.Log("Did Hit");
 
-                if (interacted)
+                if (Input.GetKeyDown(interactWithThrowable))
                 {
                     InteractWithThrowable();
                     Debug.Log("holding Throwable is True");
@@ -168,6 +163,12 @@ namespace Conaluk.TopDown
         void PlayerTakeDamage()
         {
             playerHitCounter++;
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, transform.position + transform.forward * 2f);
         }
     }
 }

@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2611103608323578456}
   - component: {fileID: 2611103608323578455}
   - component: {fileID: 7057863490991782577}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player One
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -139,15 +139,14 @@ MonoBehaviour:
   playerSprintSpeed: 8
   playerGravity: -10
   playerGameObject: {fileID: 2611103609057663082}
-  throwableGameObject: {fileID: 0}
+  throwableGameObject: {fileID: 5128116901409882037, guid: 6e80e2db72726af49ab3c899c3b31fe8, type: 3}
   interactWithThrowable: 113
   raycastDistance: 1
   throwableObjectLayer:
     serializedVersion: 2
     m_Bits: 64
-  throwableObjectRB: {fileID: 0}
+  throwableObjectRB: {fileID: 5128116901409882040, guid: 6e80e2db72726af49ab3c899c3b31fe8, type: 3}
   throwableObjectSpeed: 10
-  throwHeldObject: {fileID: 1623300403838726514, guid: 6e80e2db72726af49ab3c899c3b31fe8, type: 3}
   forwardMomentum: 10
   upwardMomentum: 10
   downwardMomentum: -10
@@ -196,7 +195,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2611103608323578463}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
@@ -275,8 +274,8 @@ MonoBehaviour:
     m_ActionId: c85b7a6b-75fa-438b-8643-aa64917f68d7
     m_ActionName: Keyboard/Sprint[/Keyboard/q]
   m_NeverAutoSwitchControlSchemes: 1
-  m_DefaultControlScheme: Controller
-  m_DefaultActionMap: Player
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Controller
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!1 &2611103609057663082
@@ -291,7 +290,7 @@ GameObject:
   - component: {fileID: 2611103609057663079}
   - component: {fileID: 2611103609057663080}
   - component: {fileID: 2611103609057663081}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Throw Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -439,9 +438,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4819223349682164798, guid: befc42e0dbd17cd44b308b4974ed16bb, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -2511240423080479738, guid: befc42e0dbd17cd44b308b4974ed16bb, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: befc42e0dbd17cd44b308b4974ed16bb, type: 3}
       propertyPath: m_Name
       value: female base
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: befc42e0dbd17cd44b308b4974ed16bb, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6164996480583612547, guid: befc42e0dbd17cd44b308b4974ed16bb, type: 3}
       propertyPath: m_Materials.Array.data[0]

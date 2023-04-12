@@ -1,8 +1,8 @@
 {
-    "name": "New Controls",
+    "name": "Player",
     "maps": [
         {
-            "name": "Player",
+            "name": "Controller",
             "id": "2308b135-55bd-4d9c-93ad-4381f1b968c3",
             "actions": [
                 {
@@ -235,6 +235,16 @@
                     "devicePath": "<DualShock4GamepadAndroid>",
                     "isOptional": true,
                     "isOR": false
+                },
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": true,
+                    "isOR": false
                 }
             ]
         },
@@ -245,6 +255,17 @@
                 {
                     "devicePath": "<Gamepad>",
                     "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Keyboard",
+            "bindingGroup": "Keyboard",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": true,
                     "isOR": false
                 }
             ]
